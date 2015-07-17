@@ -60,13 +60,20 @@ class docker_criu(ShutItModule):
 		# shutit.package_installed(package)  - Returns True if the package exists on the target
 		# shutit.set_password(password, user='')
 		#                                    - Set password for a given user on target
-		shutit.send('mkdir -p /tmp/docker_criu')
-		shutit.send('cd /tmp/docker_criu')
+		if shutit.file_exists('/tmp/docker_criu',directory=True):
+			if not shutit.get_input('Want me to try to start the existing instance up (y), or wipe the existing one (n)',boolean=True):
+				shutit.send('cd /tmp/docker_criu')
+				shutit.send('vagrant destroy -f')
+				shutit.send('cd -')
+				shutit.send('rm -rf /tmp/docker_criu')
+		else:
+			shutit.send('mkdir -p /tmp/docker_criu')
+			shutit.send('cd /tmp/docker_criu')
 		shutit.send('vagrant init larryli/vivid64')
 		shutit.send('vagrant up --provider virtualbox')
-		shutit.login('vagrant ssh')
+		shutit.login(command='vagrant ssh')
 		shutit.install('build-essential git criu')
-		shutit.send('git clone  git://kernel.ubuntu.com/ubuntu/ubuntu-vivid.git')
+		shutit.send('git clone --depth 10 git://kernel.ubuntu.com/ubuntu/ubuntu-vivid.git')
 		shutit.send('cd ubuntu-vivid')
 		shutit.send('git remote add torvalds  git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git')
 		shutit.send('git remote update')
