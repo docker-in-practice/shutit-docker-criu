@@ -66,9 +66,8 @@ class docker_criu(ShutItModule):
 				shutit.send('vagrant destroy -f')
 				shutit.send('cd -')
 				shutit.send('rm -rf /tmp/docker_criu')
-		else:
-			shutit.send('mkdir -p /tmp/docker_criu')
-			shutit.send('cd /tmp/docker_criu')
+		shutit.send('mkdir -p /tmp/docker_criu')
+		shutit.send('cd /tmp/docker_criu')
 		shutit.send('vagrant init larryli/vivid64')
 		shutit.send('vagrant up --provider virtualbox')
 		shutit.login(command='vagrant ssh')
@@ -77,7 +76,7 @@ class docker_criu(ShutItModule):
 		shutit.install('build-essential git criu')
 		shutit.send('mkdir code')
 		# Had to do this to get the git downloads to work - failed in ubuntus with signal 13
-		shutit.send(command="""docker run -v /tmp/docker_criu/code:/tmp centos:centos7 bash -c 'yum install -y git && cd /tmp && git clone git://kernel.ubuntu.com/ubuntu/ubuntu-vivid.git && cd ubuntu-vivid && git remote add torvalds  git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git && git remote update'""")
+		shutit.send("""docker run -v /tmp/docker_criu/code:/tmp centos:centos7 bash -c 'yum install -y git && cd /tmp && git clone git://kernel.ubuntu.com/ubuntu/ubuntu-vivid.git && cd ubuntu-vivid && git remote add torvalds  git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git && git remote update'""")
 		#shutit.send('git clone --depth 10 git://kernel.ubuntu.com/ubuntu/ubuntu-vivid.git')
 		#shutit.send('cd ubuntu-vivid')
 		#shutit.send('git remote add torvalds  git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git')
